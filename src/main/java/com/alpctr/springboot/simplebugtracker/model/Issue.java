@@ -1,6 +1,6 @@
 package com.alpctr.springboot.simplebugtracker.model;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,8 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "issues")
@@ -33,13 +36,21 @@ public class Issue {
 	private String milestone;
 	@Column(name = "category")
 	private String category;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "issue", referencedColumnName = "id")
+	private Issue issue;
+
+	@CreationTimestamp
+	@Column(name="created_at", nullable=false, updatable=false)
+	private Date createdAt;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "c_fid", referencedColumnName = "id")
-	private List<Comment> comments = new ArrayList<Comment>();
+	@UpdateTimestamp
+	@Column(name="updated_at")
+	private Date updatedAt;
 	
-	public Issue(long id, String subject, String description, String priority, String asignee, String milestone, String category,
-			List<Comment> comments) {
+	public Issue(long id, String subject, String description, String priority, String asignee, String milestone,
+			String category, Date createdAt, Date updatedAt, List<Comment> comments) {
 		super();
 		this.id = id;
 		this.subject = subject;
@@ -48,8 +59,10 @@ public class Issue {
 		this.asignee = asignee;
 		this.milestone = milestone;
 		this.category = category;
-		this.comments = comments;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
 	}
+
 
 	public Issue() {
 		super();
@@ -112,12 +125,20 @@ public class Issue {
 		this.category = category;
 	}
 
-	public List<Comment> getComments() {
-		return comments;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	

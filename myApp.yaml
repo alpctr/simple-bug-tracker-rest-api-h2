@@ -2,7 +2,7 @@ version: '3'
 services:
     jdbc-jsp-mysql:
         image:
-           alpctr/simple-bug-tracker-rest-api-h2:1.0
+           alpctr/simple-bug-tracker-rest-api-h2:1.1
         ports:
          - 8080:8080
         environment:
