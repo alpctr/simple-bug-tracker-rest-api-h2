@@ -40,8 +40,10 @@ public class IssueController {
 	@PostMapping("/issues/comments/{id}")
 	public void addComment(@PathVariable(name = "id") Long id, @RequestBody Comment comment) throws ResourceNotFoundException {
 		Issue issue = issueRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Issue not found for this id: " + id));
-		comment.setIssue(issue);
-		commentRepository.save(comment);
+		List<Comment> commentList = issue.getCommentList();
+		commentList.add(comment);
+		issue.setCommentList(commentList);
+		issueRepository.save(issue);
 	}
 	
 	@DeleteMapping("/issues/comments/{id}")
@@ -82,17 +84,8 @@ public class IssueController {
 	
 	@PutMapping("/issues/{id}")
 	public ResponseEntity<Issue> updateIssueById(@PathVariable(value = "id") Long id, @RequestBody Issue issue) throws ResourceNotFoundException {
+		issueRepository.updateDescripton(issue.getDescription(), id);
 		Issue issueDetails = issueRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Issue not found for this id: " + id));
-		commentRepository.deleteAll();
-		issueRepository.deleteById(id);
-		issueDetails.setSubject(issue.getSubject());
-		issueDetails.setDescription(issue.getDescription());
-		issueDetails.setPriority(issue.getPriority());
-		issueDetails.setAsignee(issue.getAsignee());
-		issueDetails.setMilestone(issue.getMilestone());
-		issueDetails.setCategory(issue.getCategory());
-		
-		issueRepository.save(issueDetails);
 		
 		return ResponseEntity.ok().body(issueDetails);
 	}

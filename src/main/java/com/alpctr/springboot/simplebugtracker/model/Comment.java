@@ -2,12 +2,9 @@ package com.alpctr.springboot.simplebugtracker.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,18 +18,13 @@ public class Comment {
 	@Column(name = "text")
 	private String text;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "issue", referencedColumnName = "id")
-	private Issue issue;
-
 	public Comment() {
 	}
 
-	public Comment(long id, String text, Issue issue) {
+	public Comment(long id, String text) {
 		super();
 		this.id = id;
 		this.text = text;
-		this.issue = issue;
 	}
 
 
@@ -52,12 +44,5 @@ public class Comment {
 		this.text = text;
 	}
 	
-	public Issue getIssue() {
-		return issue;
-	}
-
-	public void setIssue(Issue issue) {
-		this.issue = issue;
-	}
 
 }
